@@ -148,13 +148,11 @@ public class DockService extends AccessibilityService implements SharedPreferenc
 		am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sp.registerOnSharedPreferenceChangeListener(this);
-		preferLastDisplay = sp.getBoolean("prefer_last_display", false);
-		context = DeviceUtils.getDisplayContext(this, preferLastDisplay);
+		updateDisplayContext();
 		wm = (WindowManager) context.getSystemService(WINDOW_SERVICE);
 		wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
 		bm = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
 		dockHandler = new Handler(Looper.getMainLooper());
-
 		iconParserUtilities = new IconParserUtilities(context);
 
 	}
@@ -515,6 +513,13 @@ public class DockService extends AccessibilityService implements SharedPreferenc
 			pinDock();
 		else
 			Toast.makeText(context, R.string.start_message, Toast.LENGTH_LONG).show();
+	}
+
+	private void updateDisplayContext() {
+		preferLastDisplay = sp.getBoolean("prefer_last_display", false);
+		context = DeviceUtils.getDisplayContext(this, preferLastDisplay);
+		if(preferLastDisplay)
+		Toast.makeText(context, "Display id: " + context.getDisplay().getDisplayId(), Toast.LENGTH_LONG).show();
 	}
 
 	public ArrayList<Action> getAppActions(String app) {
@@ -919,12 +924,12 @@ public class DockService extends AccessibilityService implements SharedPreferenc
 						AppUtils.makeLaunchBounds(context, mode, dockLayout.getMeasuredHeight(), preferLastDisplay));
 
 			}
-			
+
 			if (Build.VERSION.SDK_INT > 28 && preferLastDisplay) {
 				int id = DeviceUtils.getSecondaryDisplay(this).getDisplayId();
 				options.setLaunchDisplayId(id);
 				Toast.makeText(context, "Launching on display: " + id, Toast.LENGTH_LONG).show();
-				
+
 			}
 
 			Method method = ActivityOptions.class.getMethod(methodName, int.class);
@@ -1328,6 +1333,8 @@ public class DockService extends AccessibilityService implements SharedPreferenc
 			}
 		} else if (p2.equals("handle_opacity"))
 			dockHandle.setAlpha(0.01f * Integer.parseInt(sp.getString("handle_opacity", "50")));
+		else if (p2.equals("prefer_last_display"))
+			updateDisplayContext();
 	}
 
 	private void updateDockTrigger() {
