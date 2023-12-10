@@ -518,8 +518,9 @@ public class DockService extends AccessibilityService implements SharedPreferenc
 	private void updateDisplayContext() {
 		preferLastDisplay = sp.getBoolean("prefer_last_display", false);
 		context = DeviceUtils.getDisplayContext(this, preferLastDisplay);
+		WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
 		if(preferLastDisplay)
-		Toast.makeText(context, "Display id: " + context.getDisplay().getDisplayId(), Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Display id: " + windowManager.getDefaultDisplay().getDisplayId(), Toast.LENGTH_LONG).show();
 	}
 
 	public ArrayList<Action> getAppActions(String app) {
