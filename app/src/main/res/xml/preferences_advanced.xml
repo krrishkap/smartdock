@@ -7,6 +7,10 @@
         android:key="prefer_last_display"
         android:summary="@string/prefer_last_display_summary"
         android:defaultValue="false" />
+		
+	<Preference
+		android:key="display_id"
+		android:title="Select display"/>
 				
 	<CheckBoxPreference
         android:title="Custom Toasts"

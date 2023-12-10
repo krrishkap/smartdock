@@ -10,10 +10,12 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import android.widget.Toast;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -42,6 +44,11 @@ public class AdvancedPreferences extends PreferenceFragmentCompat {
 		preferLastDisplay.setOnPreferenceClickListener((Preference p1) -> {
 			showAccessibilityDialog(getActivity());
 			return true;
+		});
+		
+		findPreference("display_id").setOnPreferenceClickListener((Preference p1) -> {
+			showDisplayChooserDialog(requireActivity());
+			return false;
 		});
 
 		findPreference("soft_reboot").setOnPreferenceClickListener((Preference p1) -> {
@@ -219,6 +226,20 @@ public class AdvancedPreferences extends PreferenceFragmentCompat {
 		dialog.setNegativeButton(getString(R.string.cancel), null);
 		dialog.setPositiveButton(getString(R.string.open_accessibility),
 				(DialogInterface p1, int p2) -> startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)));
+		dialog.show();
+	}
+	
+	public void showDisplayChooserDialog(final Context context) {
+		MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(context);
+		dialog.setTitle("Select a screen");
+		Display[] displays = DeviceUtils.getDisplays(context);
+		CharSequence[] displayNames = new String[displays.length];
+		for (int i=0;i<displays.length;i++){
+			displayNames[i] = displays[i].getName() + " (" + displays[i].getDisplayId()+")";
+		}
+		dialog.setSingleChoiceItems(displayNames,-1, (i, p) -> {
+			//Toast.makeText(context, displays[p].getDisplayId)
+		});
 		dialog.show();
 	}
 

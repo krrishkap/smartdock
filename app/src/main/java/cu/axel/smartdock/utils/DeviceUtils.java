@@ -249,6 +249,12 @@ public class DeviceUtils {
 		Display[] displays = dm.getDisplays();
 		return dm.getDisplays()[displays.length - 1];
 	}
+	
+	public static Display[] getDisplays(Context context){
+		DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+		Display[] displays = dm.getDisplays();
+		return dm.getDisplays();
+	}
 
 	public static DisplayMetrics getDisplayMetrics(Context context, boolean secondary) {
 		DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);

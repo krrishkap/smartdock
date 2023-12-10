@@ -918,8 +918,13 @@ public class DockService extends AccessibilityService implements SharedPreferenc
 				options.setLaunchBounds(
 						AppUtils.makeLaunchBounds(context, mode, dockLayout.getMeasuredHeight(), preferLastDisplay));
 
-				if (Build.VERSION.SDK_INT > 28 && preferLastDisplay)
-					options.setLaunchDisplayId(DeviceUtils.getSecondaryDisplay(this).getDisplayId());
+			}
+			
+			if (Build.VERSION.SDK_INT > 28 && preferLastDisplay) {
+				int id = DeviceUtils.getSecondaryDisplay(this).getDisplayId();
+				options.setLaunchDisplayId(id);
+				Toast.makeText(context, "Launching on display: " + id, Toast.LENGTH_LONG).show();
+				
 			}
 
 			Method method = ActivityOptions.class.getMethod(methodName, int.class);
